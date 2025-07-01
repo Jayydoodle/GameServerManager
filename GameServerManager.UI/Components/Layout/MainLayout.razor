@@ -17,13 +17,9 @@
             <MudText Typo="Typo.h6">Server Manager</MudText>
         </MudDrawerHeader>
         <MudNavMenu>
-            <MudNavLink Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
-            <MudNavGroup Title="Servers" Expanded="true">
-                <MudNavLink Href="@AppRoutes.Palworld.Dashboard">Palworld</MudNavLink>
-                <MudNavLink OnClick="@(() => GoTo("Settings/Security"))">Security</MudNavLink>
-            </MudNavGroup>
-            <MudNavLink Icon="@Icons.Material.Filled.LocalLibrary">Library</MudNavLink>
-            <MudNavLink Icon="@Icons.Material.Filled.People">Community</MudNavLink>
+            <MudNavLink Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+            <MudNavLink Icon="@Icons.Material.Filled.Dashboard" Href="@AppRoutes.Palworld.Dashboard">Dashboard</MudNavLink>
+            <MudNavLink Icon="@Icons.Material.Filled.Window" Href="@AppRoutes.Palworld.Console">Console</MudNavLink>
             <MudNavGroup Title="Settings">
                 <MudNavLink OnClick="@(() => GoTo("Settings/Users"))">Users</MudNavLink>
                 <MudNavLink OnClick="@(() => GoTo("Settings/Security"))">Security</MudNavLink>

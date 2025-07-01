@@ -12,6 +12,7 @@ namespace GameServerManager.BAL
 
         public static class Palworld
         {
+            public const string Console = ServerRoutePrefix + "console";
             public const string Dashboard = ServerRoutePrefix + "dashboard";
         }
     }

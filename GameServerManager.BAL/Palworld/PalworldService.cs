@@ -1,14 +1,9 @@
-﻿using GameServerManager.BAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GameServerManager.BAL
 {
-    public class PalworldService : IDisposable
+    public class PalworldService : GameServiceBase
     {
         #region Constants
 
@@ -18,94 +13,42 @@ namespace GameServerManager.BAL
 
         #endregion
 
-
-        private Timer _updateTimer;
-        private readonly TimeSpan _updateInterval = TimeSpan.FromSeconds(10);
-        private bool _isActive = false;
-        private readonly object _lockObject = new object();
-        private readonly ApiClient _apiClient;
+        #region Properties
 
         /// <summary>
         /// The current Palworld server instance
         /// </summary>
-        public PalworldServer Server { get; }
+        public PalworldServer Server { get; private set; }
 
-        private event EventHandler _dataUpdated;
-        public event EventHandler DataUpdated
+        /// <inheritdoc/>
+        protected override string ApiBaseUrl => "http://localhost:8212/v1/api";
+
+        private JsonSerializerOptions SerializerOptions = new JsonSerializerOptions()
         {
-            add
-            {
-                bool wasEmpty = _dataUpdated == null;
-                _dataUpdated += value;
+            PropertyNameCaseInsensitive = true
+        };
 
-                // Start active monitoring when first subscriber is added
-                if (wasEmpty)
-                {
-                    StartMonitoring();
-                }
-            }
-            remove
-            {
-                _dataUpdated -= value;
+        #endregion
 
-                // Stop active monitoring when last subscriber is removed
-                if (_dataUpdated == null)
-                {
-                    StopMonitoring();
-                }
-            }
-        }
+        #region Constructor
 
         public PalworldService()
+        : base()
         {
-            // Initialize the API client once
-            _apiClient = new ApiClient("http://localhost:8212/v1/api");
-            _apiClient.UseBasicAuthentication("admin", "ChesterPA1.");
-            Server = new PalworldServer();
         }
 
-        private void StartMonitoring()
-        {
-            lock (_lockObject)
-            {
-                if (!_isActive)
-                {
-                    // Do an initial refresh of server data
-                    _ = RefreshServerData();
+        #endregion
 
-                    // Start the timer for periodic updates
-                    _updateTimer = new Timer(async _ => await RefreshServerData(), null, _updateInterval, _updateInterval);
-                    _isActive = true;
-                    Console.WriteLine("Palworld monitoring started");
-                }
-            }
-        }
-
-        private void StopMonitoring()
-        {
-            lock (_lockObject)
-            {
-                if (_isActive)
-                {
-                    // Stop the timer
-                    _updateTimer?.Dispose();
-                    _updateTimer = null;
-                    _isActive = false;
-                    Console.WriteLine("Palworld monitoring stopped");
-                }
-            }
-        }
+        #region Public API
 
         /// <summary>
         /// Refreshes all server data including server info, status, and users
         /// </summary>
-        public async Task RefreshServerData()
+        public override async Task RefreshServerData()
         {
-            if (!_isActive && _dataUpdated == null)
-            {
-                // Don't refresh if no one is listening
+            // Don't refresh if no one is listening
+            if (!_isMonitoring && !HasUpdateSubscribers)
                 return;
-            }
 
             try
             {
@@ -113,25 +56,55 @@ namespace GameServerManager.BAL
                 NotifyDataUpdated();
 
                 // Create tasks for all API calls
-                var serverInfoTask = RefreshServerInfoInternal();
-                var statusTask = RefreshServerStatusInternal();
-                var usersTask = RefreshUsersInternal();
-
-                // Wait for all to complete
-                await Task.WhenAll(serverInfoTask, statusTask, usersTask);
+                await RefreshServerInfoInternal();
+                await RefreshServerStatusInternal();
+                await RefreshUsersInternal();
 
                 Server.LastUpdated = DateTime.Now;
             }
             catch (Exception ex)
             {
-                // Log error
-                Console.WriteLine($"Error refreshing server data: {ex.Message}");
+                Action printGenericError = () => System.Diagnostics.Debug.WriteLine($"Error refreshing server data: {ex.Message}");
+
+                if (ex is HttpRequestException requestException)
+                {
+                    if (requestException.HttpRequestError == HttpRequestError.ConnectionError)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Server not online, attempting to restart.");
+                        await OnServerStopped();
+                    }
+                    else
+                    {
+                        printGenericError();
+                    }
+                }
+                else
+                {
+                    printGenericError();
+                }
             }
             finally
             {
                 Server.IsLoading = false;
                 NotifyDataUpdated();
             }
+        }
+
+        #endregion
+
+        #region Private API
+
+        protected override void InitializeServer()
+        {
+            ApiClient.UseBasicAuthentication("admin", "ChesterPA1.");
+            Server = new PalworldServer();
+        }
+
+        protected override async Task OnServerStopped()
+        {
+            StopMonitoring();
+            await Server.StartServer();
+            StartMonitoring();
         }
 
         /// <summary>
@@ -141,20 +114,16 @@ namespace GameServerManager.BAL
         {
             try
             {
-                JsonObject jobject = await _apiClient.GetAsync<JsonObject>(InfoApiEndpoint);
-
-                JsonSerializerOptions options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
+                JsonObject jobject = await ApiClient.GetAsync<JsonObject>(InfoApiEndpoint);
 
                 // Deserialize directly into our existing Server object
-                JsonSerializer.Deserialize<PalworldServer>(jobject.ToJsonString(), options)
+                JsonSerializer.Deserialize<PalworldServer>(jobject.ToJsonString(), SerializerOptions)
                     .CopyPropertiesTo(Server);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error refreshing server info: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error refreshing server info: {ex.Message}");
+                throw;
             }
         }
 
@@ -165,18 +134,14 @@ namespace GameServerManager.BAL
         {
             try
             {
-                JsonObject jobject = await _apiClient.GetAsync<JsonObject>(StatusApiEndpoint);
+                JsonObject jobject = await ApiClient.GetAsync<JsonObject>(StatusApiEndpoint);
 
-                JsonSerializerOptions options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-
-                Server.Status = JsonSerializer.Deserialize<PalworldServerStatus>(jobject.ToJsonString(), options);
+                Server.Status = JsonSerializer.Deserialize<PalworldServerStatus>(jobject.ToJsonString(), SerializerOptions);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error refreshing server status: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error refreshing server status: {ex.Message}");
+                throw;
             }
         }
 
@@ -187,19 +152,14 @@ namespace GameServerManager.BAL
         {
             try
             {
-                JsonObject jobject = await _apiClient.GetAsync<JsonObject>(UsersApiEndpoint);
-
-                JsonSerializerOptions options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-
-                var users = JsonSerializer.Deserialize<List<PalworldUser>>(jobject["players"].ToJsonString(), options);
+                JsonObject jobject = await ApiClient.GetAsync<JsonObject>(UsersApiEndpoint);
+                var users = JsonSerializer.Deserialize<List<PalworldUser>>(jobject["players"].ToJsonString(), SerializerOptions);
                 await UpdateUsersCollection(users);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error refreshing users: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error refreshing users: {ex.Message}");
+                throw;
             }
         }
 
@@ -216,24 +176,7 @@ namespace GameServerManager.BAL
             }
         }
 
-        private void NotifyDataUpdated()
-        {
-            _dataUpdated?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Force a refresh even if monitoring isn't active
-        /// </summary>
-        public Task ForceRefresh()
-        {
-            return RefreshServerData();
-        }
-
-        public void Dispose()
-        {
-            StopMonitoring();
-            (_apiClient as IDisposable)?.Dispose();
-        }
+        #endregion
     }
 
     // Helper extension method for copying properties

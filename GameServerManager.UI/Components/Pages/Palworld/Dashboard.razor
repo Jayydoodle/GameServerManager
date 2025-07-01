@@ -17,11 +17,7 @@
                         <MudText Typo="Typo.caption">World ID: @PalworldService.Server.WorldGuid</MudText>
                     </MudItem>
                     <MudItem xs="12" md="6" Class="d-flex justify-end align-center">
-                        <MudChip 
-                            T = "string"
-                            Color="@(PalworldService.Server.IsOnline ? Color.Success : Color.Error)" 
-                                Size="Size.Large" 
-                                Class="ma-2">
+                        <MudChip T="string" Color="@(PalworldService.Server.IsOnline ? Color.Success : Color.Error)" Size="Size.Large" Class="ma-2">
                             @(PalworldService.Server.IsOnline ? "Online" : "Offline")
                         </MudChip>
                         <MudButton Variant="Variant.Filled" 

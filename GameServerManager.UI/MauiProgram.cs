@@ -18,6 +18,7 @@ namespace GameServerManager.UI
                 });
 
             builder.Services.AddMauiBlazorWebView();
+
             builder.Services.AddMudServices(config =>
             {
                 config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;

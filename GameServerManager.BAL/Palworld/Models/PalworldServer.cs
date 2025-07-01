@@ -7,8 +7,10 @@ namespace GameServerManager.BAL
     /// <summary>
     /// Represents a Palworld game server with all its associated data
     /// </summary>
-    public class PalworldServer
+    public class PalworldServer : GameServerBase
     {
+        #region Properties: From API
+
         /// <summary>
         /// The server version.
         /// </summary>
@@ -33,17 +35,7 @@ namespace GameServerManager.BAL
         [JsonPropertyName("worldguid")]
         public string WorldGuid { get; set; }
 
-        /// <summary>
-        /// The server's current status information
-        /// </summary>
-        [JsonIgnore]
-        public PalworldServerStatus Status { get; set; }
-
-        /// <summary>
-        /// Collection of users currently on the server
-        /// </summary>
-        [JsonIgnore]
-        public ObservableCollection<PalworldUser> Users { get; } = new ObservableCollection<PalworldUser>();
+        #endregion
 
         /// <summary>
         /// Last time the server data was updated
@@ -74,5 +66,21 @@ namespace GameServerManager.BAL
         /// </summary>
         [JsonIgnore]
         public string UptimeDisplay => Status?.UptimeFormatted ?? "Offline";
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public override string ServerExecutablePath => "G:\\steamcmd\\steamapps\\common\\PalServer\\Pal\\Binaries\\Win64\\PalServer-Win64-Shipping-Cmd.exe";
+
+        /// <summary>
+        /// The server's current status information
+        /// </summary>
+        [JsonIgnore]
+        public PalworldServerStatus Status { get; set; }
+
+        /// <summary>
+        /// Collection of users currently on the server
+        /// </summary>
+        [JsonIgnore]
+        public ObservableCollection<PalworldUser> Users { get; } = new ObservableCollection<PalworldUser>();
     }
 }
