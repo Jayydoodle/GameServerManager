@@ -46,6 +46,11 @@ namespace GameServerManager.BAL
             };
         }
 
+        /// <summary>
+        /// Tells the client to use the basic authentication scheme for the request
+        /// </summary>
+        /// <param name="username">The username for authenticationh</param>
+        /// <param name="password">The password for authentication</param>
         public void UseBasicAuthentication(string username, string password)
         {
             var byteArray = Encoding.ASCII.GetBytes($"{username}:{password}");

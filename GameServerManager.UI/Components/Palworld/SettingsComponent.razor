@@ -1,0 +1,70 @@
+﻿@inherits Palworld.PalworldComponentBase
+@using GameServerManager.UI.Components.Palworld.SettingsComponents
+
+<PageTitle>Palworld Server Settings</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Palworld Server Configuration Generator</MudText>
+    <MudText Typo="Typo.body1" Class="mb-6">Edit the values and the output below will update in real-time.</MudText>
+    
+    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+        <MudTabPanel Text="Server Settings" Visible>
+            <ServerSettingsComponent Settings="CurrentSettings" SettingsChanged="OnSettingsChanged" />
+        </MudTabPanel>
+        
+        <MudTabPanel Text="In-Game Settings">
+            <InGameSettingsComponent Settings="CurrentSettings" SettingsChanged="OnSettingsChanged" />
+        </MudTabPanel>
+        
+        <MudTabPanel Text="Advanced Settings">
+            <AdvancedSettingsComponent Settings="CurrentSettings" SettingsChanged="OnSettingsChanged" />
+        </MudTabPanel>
+
+        <MudItem xs="12" md="12" Class="d-flex justify-end align-center">
+            <MudButton Variant="Variant.Filled"
+                        Color="Color.Primary"
+                        OnClick="@SaveSettings"
+                        StartIcon="@Icons.Material.Filled.Save"
+                        IconColor="Color.Surface"
+                        Size="Size.Large">
+                Save
+            </MudButton>
+        </MudItem>
+    </MudTabs>
+    
+    <MudPaper Class="mt-6 pa-4" Elevation="2">
+        <MudText Typo="Typo.h6" Class="mb-4">Configuration Output</MudText>
+        
+        <MudTabs Elevation="1" Rounded="true" ApplyEffectsToContainer="true">
+            <MudTabPanel Text="PalWorldSettings.ini">
+                <MudPaper Class="mt-4 pa-4" Style="background-color: #f5f5f5;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <MudText Typo="Typo.body2" Style="color: #666;">
+                            You can drag PalWorldSettings.ini or WorldOption.sav to here
+                        </MudText>
+                        <div>
+                            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="PasteFromClipboard">
+                                Paste
+                            </MudButton>
+                            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="CopyToClipboard">
+                                Copy
+                            </MudButton>
+                        </div>
+                    </div>
+                    
+                    <MudTextField Value="@ConfigOutput" 
+                                  Lines="15" 
+                                  Variant="Variant.Outlined" 
+                                  ReadOnly="true"
+                                  Style="font-family: 'Courier New', monospace; font-size: 12px;" />
+                </MudPaper>
+            </MudTabPanel>
+            
+            <MudTabPanel Text="WorldOption.sav">
+                <MudPaper Class="mt-4 pa-4" Style="background-color: #f5f5f5;">
+                    <MudText Typo="Typo.body2" Class="mb-4">WorldOption.sav format coming soon...</MudText>
+                </MudPaper>
+            </MudTabPanel>
+        </MudTabs>
+    </MudPaper>
+</MudContainer>>

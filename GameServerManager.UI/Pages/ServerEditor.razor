@@ -1,0 +1,233 @@
+@using GameServerManager.BAL
+@using GameServerManager.DAL
+@using MudBlazor
+@attribute [Route(Constants.Routes.ServerManagement + $"/{{{nameof(ServerId)}:int}}")]
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudText Typo="Typo.h4" Class="mb-4">
+        @(IsEditMode ? $"Edit Server: {GameServer?.DisplayName}" : "Add New Game Server")
+    </MudText>
+
+    @if (IsLoading)
+    {
+        <MudProgressCircular Indeterminate="true" />
+        <MudText>Loading server...</MudText>
+    }
+    else
+    {
+        <MudPaper Elevation="2" Class="pa-6">
+            <EditForm Model="@GameServer" OnValidSubmit="@SaveServer">
+                <DataAnnotationsValidator />
+                
+                <MudGrid>
+                    <!-- Basic Information -->
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h5" Class="mb-3">Basic Information</MudText>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="GameServer.GameName"
+                                     Label="Game Name"
+                                     Required="true"
+                                     HelperText="e.g., Palworld, Minecraft, etc."
+                                     Variant="Variant.Outlined" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="GameServer.DisplayName"
+                                     Label="Display Name"
+                                     Required="true"
+                                     HelperText="Friendly name for this server"
+                                     Variant="Variant.Outlined" />
+                    </MudItem>
+                    
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="GameServer.Description"
+                                     Label="Description"
+                                     Lines="3"
+                                     HelperText="Optional description of this server"
+                                     Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- Server Configuration -->
+                    <MudItem xs="12">
+                        <MudDivider Class="my-4" />
+                        <MudText Typo="Typo.h5" Class="mb-3">Server Configuration</MudText>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="8">
+                        <MudTextField @bind-Value="GameServer.FolderPath"
+                                     Label="Server Folder Path"
+                                     Required="true"
+                                     HelperText="Full path to the server installation folder"
+                                     Variant="Variant.Outlined"
+                                     Adornment="Adornment.End"
+                                     AdornmentIcon="@Icons.Material.Filled.Folder" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="4">
+                        <MudButton Variant="Variant.Outlined" 
+                                  StartIcon="@Icons.Material.Filled.FolderOpen"
+                                  OnClick="@BrowseForFolder"
+                                  FullWidth="true">
+                            Browse
+                        </MudButton>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="8">
+                        <MudTextField @bind-Value="GameServer.ExecutablePath"
+                                     Label="Executable Path"
+                                     Required="true"
+                                     HelperText="Relative path to the server executable"
+                                     Variant="Variant.Outlined"
+                                     Adornment="Adornment.End"
+                                     AdornmentIcon="@Icons.Material.Filled.PlayArrow" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="4">
+                        <MudButton Variant="Variant.Outlined" 
+                                  StartIcon="@Icons.Material.Filled.Search"
+                                  OnClick="@BrowseForExecutable"
+                                  FullWidth="true">
+                            Browse
+                        </MudButton>
+                    </MudItem>
+
+                    <!-- Network Configuration -->
+                    <MudItem xs="12">
+                        <MudDivider Class="my-4" />
+                        <MudText Typo="Typo.h5" Class="mb-3">Network Configuration</MudText>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="GameServer.IpAddress"
+                                     Label="IP Address"
+                                     Required="true"
+                                     HelperText="Server bind IP address"
+                                     Variant="Variant.Outlined" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudNumericField @bind-Value="GameServer.Port"
+                                        Label="Port"
+                                        Required="true"
+                                        Min="1"
+                                        Max="65535"
+                                        HelperText="Server port number"
+                                        Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- API Configuration -->
+                    <MudItem xs="12">
+                        <MudDivider Class="my-4" />
+                        <MudText Typo="Typo.h5" Class="mb-3">API Configuration (Optional)</MudText>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="8">
+                        <MudTextField @bind-Value="GameServer.ApiBaseUrl"
+                                     Label="API Base URL"
+                                     HelperText="Base URL for server API (if available)"
+                                     Variant="Variant.Outlined"
+                                     Placeholder="http://localhost:8080/api" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="4">
+                        <MudNumericField @bind-Value="GameServer.ApiPort"
+                                        Label="API Port"
+                                        Min="1"
+                                        Max="65535"
+                                        HelperText="API port number"
+                                        Variant="Variant.Outlined" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="GameServer.ApiUsername"
+                                     Label="API Username"
+                                     HelperText="Username for API authentication"
+                                     Variant="Variant.Outlined" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="GameServer.ApiPassword"
+                                     Label="API Password"
+                                     InputType="InputType.Password"
+                                     HelperText="Password for API authentication"
+                                     Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <!-- Management Options -->
+                    <MudItem xs="12">
+                        <MudDivider Class="my-4" />
+                        <MudText Typo="Typo.h5" Class="mb-3">Management Options</MudText>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudSwitch @bind-Value="GameServer.EnableAutoRestart"
+                                  Label="Enable Auto-Restart"
+                                  Color="Color.Primary" />
+                        <MudText Typo="Typo.caption" Class="ml-8">
+                            Automatically restart the server if it crashes
+                        </MudText>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudSwitch @bind-Value="GameServer.EnableMonitoring"
+                                  Label="Enable Monitoring"
+                                  Color="Color.Primary" />
+                        <MudText Typo="Typo.caption" Class="ml-8">
+                            Monitor server status and performance
+                        </MudText>
+                    </MudItem>
+                    
+                    <MudItem xs="12" md="6">
+                        <MudNumericField @bind-Value="GameServer.MonitoringRefreshInterval"
+                                        Label="Monitoring Interval (seconds)"
+                                        Min="5"
+                                        Max="300"
+                                        HelperText="How often to refresh server status"
+                                        Variant="Variant.Outlined"
+                                        Disabled="@(!GameServer.EnableMonitoring)" />
+                    </MudItem>
+
+                    <!-- Action Buttons -->
+                    <MudItem xs="12">
+                        <MudDivider Class="my-4" />
+                        <MudStack Row="true" Spacing="3" Justify="Justify.FlexEnd">
+                            <MudButton Variant="Variant.Outlined"
+                                      OnClick="@Cancel"
+                                      StartIcon="@Icons.Material.Filled.Cancel">
+                                Cancel
+                            </MudButton>
+                            
+                            @if (IsEditMode)
+                            {
+                                <MudButton Variant="Variant.Filled"
+                                          Color="Color.Error"
+                                          OnClick="@DeleteServer"
+                                          StartIcon="@Icons.Material.Filled.Delete">
+                                    Delete Server
+                                </MudButton>
+                            }
+                            
+                            <MudButton Variant="Variant.Filled"
+                                      Color="Color.Primary"
+                                      ButtonType="ButtonType.Submit"
+                                      StartIcon="@Icons.Material.Filled.Save"
+                                      Disabled="@IsSaving">
+                                @if (IsSaving)
+                                {
+                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                                    <span class="ml-2">Saving...</span>
+                                }
+                                else
+                                {
+                                    <span>@(IsEditMode ? "Update Server" : "Create Server")</span>
+                                }
+                            </MudButton>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </MudPaper>
+    }
+</MudContainer>

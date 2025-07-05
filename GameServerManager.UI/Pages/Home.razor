@@ -1,0 +1,12 @@
+﻿@page "/"
+@using GameServerManager.BAL
+@inject GameServerService GameServerService
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GameServerService.InitializeManagedServers();
+        await base.OnInitializedAsync();
+    }
+}

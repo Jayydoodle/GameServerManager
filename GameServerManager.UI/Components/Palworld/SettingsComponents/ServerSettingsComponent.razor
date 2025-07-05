@@ -1,0 +1,136 @@
+@using GameServerManager.BAL
+
+<MudGrid>
+    <MudItem xs="12" md="6">
+        <MudTextField Value="Settings.ServerName"
+                      ValueChanged="@((string value) => { Settings.ServerName = value; OnValueChanged(); })"
+                      Label="Server Name"
+                      Variant="Variant.Outlined"
+                      HelperText="The name of your server" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.ServerPlayerMaxNum"
+                         ValueChanged="@((int value) => { Settings.ServerPlayerMaxNum = value; OnValueChanged(); })"
+                         Label="Server Player Max Num"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         Max="32"
+                         HelperText="Maximum number of players" />
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudTextField Value="Settings.ServerDescription"
+                      ValueChanged="@((string value) => { Settings.ServerDescription = value; OnValueChanged(); })"
+                      Label="Server Description"
+                      Variant="Variant.Outlined"
+                      Lines="3"
+                      HelperText="Description of your server" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudTextField Value="Settings.AdminPassword"
+                      ValueChanged="@((string value) => { Settings.AdminPassword = value; OnValueChanged(); })"
+                      Label="Admin Password"
+                      Variant="Variant.Outlined"
+                      InputType="InputType.Password"
+                      HelperText="Password for admin access" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudTextField Value="Settings.ServerPassword"
+                      ValueChanged="@((string value) => { Settings.ServerPassword = value; OnValueChanged(); })"
+                      Label="Server Password"
+                      Variant="Variant.Outlined"
+                      InputType="InputType.Password"
+                      HelperText="Password to join the server (leave empty for no password)" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudTextField Value="Settings.PublicIP"
+                      ValueChanged="@((string value) => { Settings.PublicIP = value; OnValueChanged(); })"
+                      Label="Public IP"
+                      Variant="Variant.Outlined"
+                      HelperText="Public IP address (leave empty for auto-detection)" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.PublicPort"
+                         ValueChanged="@((int value) => { Settings.PublicPort = value; OnValueChanged(); })"
+                         Label="Public Port"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         Max="65535"
+                         HelperText="Port for server connections" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.RCONEnabled"
+                   ValueChanged="@((bool value) => { Settings.RCONEnabled = value; OnValueChanged(); })"
+                   Label="RCON Enabled"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.RCONPort"
+                         ValueChanged="@((int value) => { Settings.RCONPort = value; OnValueChanged(); })"
+                         Label="RCON Port"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         Max="65535"
+                         Disabled="!Settings.RCONEnabled"
+                         HelperText="Port for RCON connections" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.RESTAPIEnabled"
+                   ValueChanged="@((bool value) => { Settings.RESTAPIEnabled = value; OnValueChanged(); })"
+                   Label="REST API Enabled"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.RESTAPIPort"
+                         ValueChanged="@((int value) => { Settings.RESTAPIPort = value; OnValueChanged(); })"
+                         Label="REST API Port"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         Max="65535"
+                         Disabled="!Settings.RESTAPIEnabled"
+                         HelperText="Port for REST API connections" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudTextField Value="Settings.Region"
+                      ValueChanged="@((string value) => { Settings.Region = value; OnValueChanged(); })"
+                      Label="Region"
+                      Variant="Variant.Outlined"
+                      HelperText="Server region (leave empty for auto-detection)" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.UseAuth"
+                   ValueChanged="@((bool value) => { Settings.UseAuth = value; OnValueChanged(); })"
+                   Label="Use Auth"
+                   Color="Color.Primary"
+                   HelperText="Enable authentication" />
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudTextField Value="Settings.BanListURL"
+                      ValueChanged="@((string value) => { Settings.BanListURL = value; OnValueChanged(); })"
+                      Label="Ban List URL"
+                      Variant="Variant.Outlined"
+                      HelperText="URL for the ban list" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter] public PalworldSettings Settings { get; set; } = new();
+    [Parameter] public EventCallback<PalworldSettings> SettingsChanged { get; set; }
+
+    private async Task OnValueChanged()
+    {
+        await SettingsChanged.InvokeAsync(Settings);
+    }
+}

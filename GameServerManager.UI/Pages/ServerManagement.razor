@@ -1,0 +1,171 @@
+@using GameServerManager.BAL
+@using MudBlazor
+@attribute [Route(Constants.Routes.ServerManagement)]
+@inherits ComponentBase
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+        <MudText Typo="Typo.h4">Server Management</MudText>
+        <MudButton Variant="Variant.Filled" 
+                  Color="Color.Primary" 
+                  StartIcon="@Icons.Material.Filled.Add"
+                  OnClick="@AddNewServer">
+            Add New Server
+        </MudButton>
+    </MudStack>
+
+    @if (IsLoading)
+    {
+        <MudStack AlignItems="AlignItems.Center" Class="mt-8">
+            <MudProgressCircular Indeterminate="true" Size="Size.Large" />
+            <MudText Typo="Typo.h6" Class="mt-4">Loading servers...</MudText>
+        </MudStack>
+    }
+    else if (!Servers.Any())
+    {
+        <MudPaper Elevation="2" Class="pa-8 text-center">
+            <MudIcon Icon="@Icons.Material.Filled.Storage" Size="Size.Large" Color="Color.Default" Class="mb-4" />
+            <MudText Typo="Typo.h5" Class="mb-2">No Servers Found</MudText>
+            <MudText Typo="Typo.body1" Class="mb-4">
+                You haven't configured any game servers yet. Click the button below to add your first server.
+            </MudText>
+            <MudButton Variant="Variant.Filled" 
+                      Color="Color.Primary" 
+                      StartIcon="@Icons.Material.Filled.Add"
+                      OnClick="@AddNewServer">
+                Add Your First Server
+            </MudButton>
+        </MudPaper>
+    }
+    else
+    {
+        <MudGrid>
+            @foreach (var server in Servers)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudCard Elevation="3" Class="server-card" Style="height: 100%; cursor: pointer;" 
+                             @onclick="@(() => EditServer(server.GameServerId))">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                                    <MudText Typo="Typo.h6" Class="server-title">@server.DisplayName</MudText>
+                                    <MudChip T="string" 
+                                            Color="@GetGameTypeColor(server.GameName)" 
+                                            Size="Size.Small" 
+                                            Variant="Variant.Filled">
+                                        @server.GameName
+                                    </MudChip>
+                                </MudStack>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        
+                        <MudCardContent Class="pb-2">
+                            <MudStack Spacing="2">
+                                @if (!string.IsNullOrEmpty(server.Description))
+                                {
+                                    <MudText Typo="Typo.body2" Class="server-description">
+                                        @(server.Description.Length > 80 ? server.Description.Substring(0, 80) + "..." : server.Description)
+                                    </MudText>
+                                }
+                                
+                                <MudDivider />
+                                
+                                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudIcon Icon="@Icons.Material.Filled.NetworkCheck" Size="Size.Small" />
+                                        <MudText Typo="Typo.caption">@server.IpAddress:@server.Port</MudText>
+                                    </MudStack>
+                                    
+                                    @if (server.EnableMonitoring)
+                                    {
+                                        <MudChip T="string" 
+                                                Color="Color.Success" 
+                                                Size="Size.Small" 
+                                                Variant="Variant.Text"
+                                                Icon="@Icons.Material.Filled.Visibility">
+                                            Monitored
+                                        </MudChip>
+                                    }
+                                </MudStack>
+                                
+                                @if (!string.IsNullOrEmpty(server.FolderPath))
+                                {
+                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudIcon Icon="@Icons.Material.Filled.Folder" Size="Size.Small" />
+                                        <MudText Typo="Typo.caption" Class="text-truncate">
+                                            @(server.FolderPath.Length > 30 ? "..." + server.FolderPath.Substring(server.FolderPath.Length - 30) : server.FolderPath)
+                                        </MudText>
+                                    </MudStack>
+                                }
+                            </MudStack>
+                        </MudCardContent>
+                        
+                        <MudCardActions Class="pt-0">
+                            <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Style="width: 100%;">
+                                <MudText Typo="Typo.caption" Color="Color.Default">
+                                    Updated: @server.UpdatedDate.ToString("MMM dd, yyyy")
+                                </MudText>
+                                
+                                <MudStack Row="true" Spacing="1">
+                                    @if (server.EnableAutoRestart)
+                                    {
+                                        <MudTooltip Text="Auto-restart enabled">
+                                            <MudIcon Icon="@Icons.Material.Filled.RestartAlt" 
+                                                    Size="Size.Small" 
+                                                    Color="Color.Info" />
+                                        </MudTooltip>
+                                    }
+                                    
+                                    @if (!string.IsNullOrEmpty(server.ApiBaseUrl))
+                                    {
+                                        <MudTooltip Text="API configured">
+                                            <MudIcon Icon="@Icons.Material.Filled.Api" 
+                                                    Size="Size.Small" 
+                                                    Color="Color.Warning" />
+                                        </MudTooltip>
+                                    }
+                                    
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                                  Size="Size.Small" 
+                                                  Color="Color.Primary"
+                                                  OnClick="@((e) => EditServerClick(e, server.GameServerId))"
+                                                  Title="Edit Server" />
+                                </MudStack>
+                            </MudStack>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+        
+        <MudStack Row="true" Justify="Justify.Center" Class="mt-6">
+            <MudText Typo="Typo.caption" Color="Color.Default">
+                @Servers.Count server@(Servers.Count == 1 ? "" : "s") configured
+            </MudText>
+        </MudStack>
+    }
+</MudContainer>
+
+<style>
+    .server-card:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease-in-out;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    .server-title {
+        font-weight: 600;
+        color: var(--mud-palette-text-primary);
+    }
+    
+    .server-description {
+        color: var(--mud-palette-text-secondary);
+        line-height: 1.4;
+    }
+    
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>

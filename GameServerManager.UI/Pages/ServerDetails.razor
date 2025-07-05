@@ -1,0 +1,25 @@
+﻿@using GameServerManager.BAL
+@using GameServerManager.UI.Components.Palworld
+@using MudBlazor
+@inherits ComponentBase
+@attribute [Route(Constants.Routes.ServerDetails + $"/{{{nameof(ServerId)}:int}}")]
+
+<MudPaper MaxHeight="350px">
+    <div Class="d-flex justify-center" Style="max-width: 100%; max-height: 350px;">
+        <MudImage Src="images/palworld_logo.jpg" Width="1700" Style="max-width: 100%; max-height: 400px;">Test</MudImage>
+    </div>
+</MudPaper>
+
+<MudTabs Color="Color.Dark">
+    <MudTabPanel Text="Dashboard" Icon="@Icons.Material.Filled.Home">
+        <DashboardComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="Players" Icon="@Icons.Material.Filled.People">
+    </MudTabPanel>
+    <MudTabPanel Text="Logs" Icon="@Icons.Material.Filled.Newspaper">
+
+    </MudTabPanel>
+    <MudTabPanel Text="Settings" Icon="@Icons.Material.Filled.Settings">
+        <SettingsComponent />
+    </MudTabPanel>
+</MudTabs>

@@ -1,0 +1,190 @@
+@using GameServerManager.BAL
+
+<MudGrid>
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.EnablePlayerToPlayerDamage"
+                   ValueChanged="@((bool value) => { Settings.EnablePlayerToPlayerDamage = value; OnValueChanged(); })"
+                   Label="Enable Player To Player Damage"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.DropItemMaxNum"
+                         ValueChanged="@((int value) => { Settings.DropItemMaxNum = value; OnValueChanged(); })"
+                         Label="Drop Item Max Num (UNKO)"
+                         Variant="Variant.Outlined"
+                         Min="0"
+                         HelperText="Maximum number of dropped items" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.BaseCampMaxNum"
+                         ValueChanged="@((int value) => { Settings.BaseCampMaxNum = value; OnValueChanged(); })"
+                         Label="Base Camp Max Num"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         HelperText="Maximum number of base camps" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.DropItemAliveMaxHours"
+                         ValueChanged="@((double value) => { Settings.DropItemAliveMaxHours = value; OnValueChanged(); })"
+                         Label="Drop Item Alive Max Hours"
+                         Variant="Variant.Outlined"
+                         Min="0"
+                         Step="0.1"
+                         HelperText="Hours items stay on ground" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.AutoResetGuildNoOnlinePlayers"
+                   ValueChanged="@((bool value) => { Settings.AutoResetGuildNoOnlinePlayers = value; OnValueChanged(); })"
+                   Label="Auto Reset Guild No Online Players"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.AutoResetGuildTimeNoOnlinePlayers"
+                         ValueChanged="@((double value) => { Settings.AutoResetGuildTimeNoOnlinePlayers = value; OnValueChanged(); })"
+                         Label="Auto Reset Guild Time No Online Players"
+                         Variant="Variant.Outlined"
+                         Min="0"
+                         HelperText="Hours before guild reset" />
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Work Speed Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: red;">Harder</MudText>
+            <MudSlider Value="Settings.WorkSpeedRate"
+                       ValueChanged="@((double value) => { Settings.WorkSpeedRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: green;">Easier</MudText>
+            <MudNumericField Value="Settings.WorkSpeedRate"
+                             ValueChanged="@((double value) => { Settings.WorkSpeedRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.IsMultiplay"
+                   ValueChanged="@((bool value) => { Settings.IsMultiplay = value; OnValueChanged(); })"
+                   Label="Is Multiplay"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.IsPvP"
+                   ValueChanged="@((bool value) => { Settings.IsPvP = value; OnValueChanged(); })"
+                   Label="Is PvP"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.CanPickupOtherGuildDeathPenaltyDrop"
+                   ValueChanged="@((bool value) => { Settings.CanPickupOtherGuildDeathPenaltyDrop = value; OnValueChanged(); })"
+                   Label="Can Pickup Other Guild Death Penalty Drop"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.EnableNonLoginPenalty"
+                   ValueChanged="@((bool value) => { Settings.EnableNonLoginPenalty = value; OnValueChanged(); })"
+                   Label="Enable Non Login Penalty"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.EnableFastTravel"
+                   ValueChanged="@((bool value) => { Settings.EnableFastTravel = value; OnValueChanged(); })"
+                   Label="Enable Fast Travel"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.IsStartLocationSelectByMap"
+                   ValueChanged="@((bool value) => { Settings.IsStartLocationSelectByMap = value; OnValueChanged(); })"
+                   Label="Is Start Location Select By Map"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.ExistPlayerAfterLogout"
+                   ValueChanged="@((bool value) => { Settings.ExistPlayerAfterLogout = value; OnValueChanged(); })"
+                   Label="Exist Player After Logout"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.EnableDefenseOtherGuildPlayer"
+                   ValueChanged="@((bool value) => { Settings.EnableDefenseOtherGuildPlayer = value; OnValueChanged(); })"
+                   Label="Enable Defense Other Guild Player"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.InvisibleOtherGuildBaseCampAreaFX"
+                   ValueChanged="@((bool value) => { Settings.InvisibleOtherGuildBaseCampAreaFX = value; OnValueChanged(); })"
+                   Label="Invisible Other Guild Base Camp Area FX"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.BuildAreaLimit"
+                   ValueChanged="@((bool value) => { Settings.BuildAreaLimit = value; OnValueChanged(); })"
+                   Label="Build Area Limit"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.PalSyncDistanceFromPlayer"
+                         ValueChanged="@((int value) => { Settings.PalSyncDistanceFromPlayer = value; OnValueChanged(); })"
+                         Label="Pal Sync Distance From Player"
+                         Variant="Variant.Outlined"
+                         Min="0"
+                         HelperText="Distance for pal synchronization" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.EnableOnlinePlayerListInDedicatedServer"
+                   ValueChanged="@((bool value) => { Settings.EnableOnlinePlayerListInDedicatedServer = value; OnValueChanged(); })"
+                   Label="Enable Online Player List in Dedicated Server"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.AllowGlobalPalboxExport"
+                   ValueChanged="@((bool value) => { Settings.AllowGlobalPalboxExport = value; OnValueChanged(); })"
+                   Label="Allow Global Palbox Export"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.AllowGlobalPalboxImport"
+                   ValueChanged="@((bool value) => { Settings.AllowGlobalPalboxImport = value; OnValueChanged(); })"
+                   Label="Allow Global Palbox Import"
+                   Color="Color.Primary" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter] public PalworldSettings Settings { get; set; } = new();
+    [Parameter] public EventCallback<PalworldSettings> SettingsChanged { get; set; }
+
+    private async Task OnValueChanged()
+    {
+        await SettingsChanged.InvokeAsync(Settings);
+    }
+
+    private async Task OnValueChanged<T>(T value)
+    {
+        await SettingsChanged.InvokeAsync(Settings);
+    }
+}

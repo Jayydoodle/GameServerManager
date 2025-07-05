@@ -1,0 +1,573 @@
+@using GameServerManager.BAL
+
+<MudGrid>
+    <!-- Time and Speed Settings -->
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Day Time Speed Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.DayTimeSpeedRate"
+                       ValueChanged="@((double value) => { Settings.DayTimeSpeedRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.DayTimeSpeedRate"
+                             ValueChanged="@((double value) => { Settings.DayTimeSpeedRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Night Time Speed Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.NightTimeSpeedRate"
+                       ValueChanged="@((double value) => { Settings.NightTimeSpeedRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.NightTimeSpeedRate"
+                             ValueChanged="@((double value) => { Settings.NightTimeSpeedRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <!-- Experience and Capture Settings -->
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Exp Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: red;">Harder</MudText>
+            <MudSlider Value="Settings.ExpRate"
+                       ValueChanged="@((double value) => { Settings.ExpRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: green;">Easier</MudText>
+            <MudNumericField Value="Settings.ExpRate"
+                             ValueChanged="@((double value) => { Settings.ExpRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Pal Capture Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: red;">Harder</MudText>
+            <MudSlider Value="Settings.PalCaptureRate"
+                       ValueChanged="@((double value) => { Settings.PalCaptureRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: green;">Easier</MudText>
+            <MudNumericField Value="Settings.PalCaptureRate"
+                             ValueChanged="@((double value) => { Settings.PalCaptureRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Pal Spawn Number Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.PalSpawnNumRate"
+                       ValueChanged="@((double value) => { Settings.PalSpawnNumRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.PalSpawnNumRate"
+                             ValueChanged="@((double value) => { Settings.PalSpawnNumRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <!-- Pal Damage Settings -->
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Pal Damage Rate Attack</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.PalDamageRateAttack"
+                       ValueChanged="@((double value) => { Settings.PalDamageRateAttack = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.PalDamageRateAttack"
+                             ValueChanged="@((double value) => { Settings.PalDamageRateAttack = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Pal Damage Rate Defense</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.PalDamageRateDefense"
+                       ValueChanged="@((double value) => { Settings.PalDamageRateDefense = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.PalDamageRateDefense"
+                             ValueChanged="@((double value) => { Settings.PalDamageRateDefense = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <!-- Player Damage Settings -->
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Player Damage Rate Attack</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: red;">Harder</MudText>
+            <MudSlider Value="Settings.PlayerDamageRateAttack"
+                       ValueChanged="@((double value) => { Settings.PlayerDamageRateAttack = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: green;">Easier</MudText>
+            <MudNumericField Value="Settings.PlayerDamageRateAttack"
+                             ValueChanged="@((double value) => { Settings.PlayerDamageRateAttack = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Player Damage Rate Defense</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: green;">Easier</MudText>
+            <MudSlider Value="Settings.PlayerDamageRateDefense"
+                       ValueChanged="@((double value) => { Settings.PlayerDamageRateDefense = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: red;">Harder</MudText>
+            <MudNumericField Value="Settings.PlayerDamageRateDefense"
+                             ValueChanged="@((double value) => { Settings.PlayerDamageRateDefense = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <!-- Stamina and Health Settings -->
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Player Stomach Decrease Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: green;">Easier</MudText>
+            <MudSlider Value="Settings.PlayerStomachDecreaseRate"
+                       ValueChanged="@((double value) => { Settings.PlayerStomachDecreaseRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: red;">Harder</MudText>
+            <MudNumericField Value="Settings.PlayerStomachDecreaseRate"
+                             ValueChanged="@((double value) => { Settings.PlayerStomachDecreaseRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Player Stamina Decrease Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: green;">Easier</MudText>
+            <MudSlider Value="Settings.PlayerStaminaDecreaseRate"
+                       ValueChanged="@((double value) => { Settings.PlayerStaminaDecreaseRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: red;">Harder</MudText>
+            <MudNumericField Value="Settings.PlayerStaminaDecreaseRate"
+                             ValueChanged="@((double value) => { Settings.PlayerStaminaDecreaseRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Player Auto HP Regen Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: red;">Harder</MudText>
+            <MudSlider Value="Settings.PlayerAutoHPRegenRate"
+                       ValueChanged="@((double value) => { Settings.PlayerAutoHPRegenRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: green;">Easier</MudText>
+            <MudNumericField Value="Settings.PlayerAutoHPRegenRate"
+                             ValueChanged="@((double value) => { Settings.PlayerAutoHPRegenRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Player Auto HP Regen Rate In Sleep</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: red;">Harder</MudText>
+            <MudSlider Value="Settings.PlayerAutoHPRegenRateInSleep"
+                       ValueChanged="@((double value) => { Settings.PlayerAutoHPRegenRateInSleep = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: green;">Easier</MudText>
+            <MudNumericField Value="Settings.PlayerAutoHPRegenRateInSleep"
+                             ValueChanged="@((double value) => { Settings.PlayerAutoHPRegenRateInSleep = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <!-- Building Settings -->
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Build Object HP Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.BuildObjectHPRate"
+                       ValueChanged="@((double value) => { Settings.BuildObjectHPRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.BuildObjectHPRate"
+                             ValueChanged="@((double value) => { Settings.BuildObjectHPRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Build Object Damage Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.BuildObjectDamageRate"
+                       ValueChanged="@((double value) => { Settings.BuildObjectDamageRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.BuildObjectDamageRate"
+                             ValueChanged="@((double value) => { Settings.BuildObjectDamageRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Build Object Deterioration Damage Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.BuildObjectDeteriorationDamageRate"
+                       ValueChanged="@((double value) => { Settings.BuildObjectDeteriorationDamageRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.BuildObjectDeteriorationDamageRate"
+                             ValueChanged="@((double value) => { Settings.BuildObjectDeteriorationDamageRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <!-- Collection and Drop Settings -->
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Collection Drop Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: red;">Harder</MudText>
+            <MudSlider Value="Settings.CollectionDropRate"
+                       ValueChanged="@((double value) => { Settings.CollectionDropRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: green;">Easier</MudText>
+            <MudNumericField Value="Settings.CollectionDropRate"
+                             ValueChanged="@((double value) => { Settings.CollectionDropRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Collection Object HP Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: green;">Easier</MudText>
+            <MudSlider Value="Settings.CollectionObjectHpRate"
+                       ValueChanged="@((double value) => { Settings.CollectionObjectHpRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: red;">Harder</MudText>
+            <MudNumericField Value="Settings.CollectionObjectHpRate"
+                             ValueChanged="@((double value) => { Settings.CollectionObjectHpRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Collection Object Respawn Interval Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: green;">Easier</MudText>
+            <MudSlider Value="Settings.CollectionObjectRespawnSpeedRate"
+                       ValueChanged="@((double value) => { Settings.CollectionObjectRespawnSpeedRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: red;">Harder</MudText>
+            <MudNumericField Value="Settings.CollectionObjectRespawnSpeedRate"
+                             ValueChanged="@((double value) => { Settings.CollectionObjectRespawnSpeedRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Enemy Drop Item Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: red;">Harder</MudText>
+            <MudSlider Value="Settings.EnemyDropItemRate"
+                       ValueChanged="@((double value) => { Settings.EnemyDropItemRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudText Style="color: green;">Easier</MudText>
+            <MudNumericField Value="Settings.EnemyDropItemRate"
+                             ValueChanged="@((double value) => { Settings.EnemyDropItemRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <!-- Pal Settings -->
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Pal Egg Default Hatching Time</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudText Style="color: green;">Easier</MudText>
+            <MudSlider Value="Settings.PalEggDefaultHatchingTime"
+                       ValueChanged="@((double value) => { Settings.PalEggDefaultHatchingTime = value; OnValueChanged(); })"
+                       Min="1"
+                       Max="240"
+                       Step="1"
+                       Style="flex: 1;" />
+            <MudText Style="color: red;">Harder</MudText>
+            <MudNumericField Value="Settings.PalEggDefaultHatchingTime"
+                             ValueChanged="@((double value) => { Settings.PalEggDefaultHatchingTime = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="1"
+                             Max="240"
+                             Step="1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <!-- Game Mode Settings -->
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.EnableInvaderEnemy"
+                   ValueChanged="@((bool value) => { Settings.EnableInvaderEnemy = value; OnValueChanged(); })"
+                   Label="Enable Invader Enemy"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudSwitch Value="Settings.EnablePredatorBossPal"
+                   ValueChanged="@((bool value) => { Settings.EnablePredatorBossPal = value; OnValueChanged(); })"
+                   Label="Enable Predator Boss Pal"
+                   Color="Color.Primary" />
+    </MudItem>
+    
+    <!-- Death Penalty -->
+    <MudItem xs="12" md="6">
+        <MudSelect Value="Settings.DeathPenalty"
+                   ValueChanged="@((string value) => { Settings.DeathPenalty = value; OnValueChanged(); })"
+                   Label="Death Penalty"
+                   Variant="Variant.Outlined">
+            <MudSelectItem Value="@("All")">Lost All item, equipment, pal (in inventory)</MudSelectItem>
+            <MudSelectItem Value="@("Item")">Lost item (in inventory)</MudSelectItem>
+            <MudSelectItem Value="@("ItemAndEquipment")">Lost item, equipment (in inventory)</MudSelectItem>
+            <MudSelectItem Value="@("None")">None</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+    
+    <!-- Guild Settings -->
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.GuildPlayerMaxNum"
+                         ValueChanged="@((int value) => { Settings.GuildPlayerMaxNum = value; OnValueChanged(); })"
+                         Label="Guild Player Max Num"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         HelperText="Maximum players in a guild" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.BaseCampMaxNumInGuild"
+                         ValueChanged="@((int value) => { Settings.BaseCampMaxNumInGuild = value; OnValueChanged(); })"
+                         Label="Base Camp Max Num In Guild"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         HelperText="Maximum base camps per guild" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.BaseCampWorkerMaxNum"
+                         ValueChanged="@((int value) => { Settings.BaseCampWorkerMaxNum = value; OnValueChanged(); })"
+                         Label="Base Camp Worker Max Num"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         HelperText="Maximum workers per base camp" />
+    </MudItem>
+    
+    <!-- Advanced Limits -->
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.MaxBuildingLimitPerPlayer"
+                         ValueChanged="@((int value) => { Settings.MaxBuildingLimitPerPlayer = value; OnValueChanged(); })"
+                         Label="Max Building Limit Per Player"
+                         Variant="Variant.Outlined"
+                         Min="0"
+                         HelperText="0 = unlimited" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.SupplyDropSpan"
+                         ValueChanged="@((int value) => { Settings.SupplyDropSpan = value; OnValueChanged(); })"
+                         Label="Interval for supply drop or meteorite (minutes)"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         HelperText="Minutes between supply drops" />
+    </MudItem>
+    
+    <MudItem xs="12" md="6">
+        <MudNumericField Value="Settings.ChatPostLimitPerMinute"
+                         ValueChanged="@((int value) => { Settings.ChatPostLimitPerMinute = value; OnValueChanged(); })"
+                         Label="Chat Post Limit Per Minute"
+                         Variant="Variant.Outlined"
+                         Min="1"
+                         HelperText="Maximum chat messages per minute" />
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Equipment Durability Damage Rate</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.EquipmentDurabilityDamageRate"
+                       ValueChanged="@((double value) => { Settings.EquipmentDurabilityDamageRate = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.EquipmentDurabilityDamageRate"
+                             ValueChanged="@((double value) => { Settings.EquipmentDurabilityDamageRate = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6" Class="mb-4">Item Container Force Mark Dirty Interval</MudText>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <MudSlider Value="Settings.ItemContainerForceDirtyInterval"
+                       ValueChanged="@((double value) => { Settings.ItemContainerForceDirtyInterval = value; OnValueChanged(); })"
+                       Min="0.1"
+                       Max="5.0"
+                       Step="0.1"
+                       Style="flex: 1;" />
+            <MudNumericField Value="Settings.ItemContainerForceDirtyInterval"
+                             ValueChanged="@((double value) => { Settings.ItemContainerForceDirtyInterval = value; OnValueChanged(); })"
+                             Variant="Variant.Outlined"
+                             Min="0.1"
+                             Max="5.0"
+                             Step="0.1"
+                             Style="width: 120px;" />
+        </div>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter] public PalworldSettings Settings { get; set; } = new();
+    [Parameter] public EventCallback<PalworldSettings> SettingsChanged { get; set; }
+
+    private async Task OnValueChanged()
+    {
+        await SettingsChanged.InvokeAsync(Settings);
+    }
+
+    private async Task OnValueChanged<T>(T value)
+    {
+        await SettingsChanged.InvokeAsync(Settings);
+    }
+}
